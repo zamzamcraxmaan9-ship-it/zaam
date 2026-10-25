@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us — Nuwafana Pizza</title>
+    <meta name="description"
+        content="Learn about Nuwafana Pizza's story, mission, and commitment to fresh, quality pizza in Mogadishu, Somalia." />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* ── ABOUT-SPECIFIC STYLES ── */
+        .about-story {
+            background: var(--white);
+        }
+
+        .about-story .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .about-story-img {
+            border-radius: 20px;
+            height: 480px;
+            object-fit: cover;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .about-image-wrap {
+            position: relative;
+        }
+
+        .about-image-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--red);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 18px 24px;
+            box-shadow: 0 8px 24px rgba(192, 57, 43, 0.4);
+            text-align: center;
+        }
+
+        .about-image-badge .badge-num {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .about-image-badge .badge-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .about-text .subtitle {
+            color: var(--red);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .about-text h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            color: var(--black);
+            line-height: 1.25;
+            margin-bottom: 20px;
+        }
+
+        .about-text h2 span {
+            color: var(--red);
+        }
+
+        .about-text p {
+            color: #555;
+            font-size: 0.97rem;
+            line-height: 1.85;
+            margin-bottom: 16px;
+        }
+
+        /* Values Section */
+        .values-section {
+            background: var(--cream);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .value-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .value-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .value-card .v-icon {
+            font-size: 2.8rem;
+            margin-bottom: 14px;
+        }
+
+        .value-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+
+        .value-card p {
+            color: var(--gray);
+            font-size: 0.88rem;
+        }
+
+        /* Team/Numbers Section */
+        .numbers-section {
+            background: var(--black);
+            padding: 60px 0;
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            text-align: center;
+        }
+
+        .number-item .num {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--red);
+            font-weight: 900;
+        }
+
+        .number-item .num-label {
+            color: #888;
+            font-size: 0.88rem;
+            margin-top: 4px;
+        }
+
+        /* Mission */
+        .mission-section {
+            background: linear-gradient(135deg, var(--red) 0%, #8b1a0e 100%);
+            padding: 80px 0;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .mission-section h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin-bottom: 16px;
+        }
+
+        .mission-section p {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            max-width: 640px;
+            margin: 0 auto 32px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 900px) {
+            .about-story .container {
+                grid-template-columns: 1fr;
+            }
+
+            .about-image-badge {
+                right: 12px;
+                bottom: -12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">🍕</div>
+                <div class="logo-text">Nuwa<span>fana</span></div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="menu.html" class="nav-link">Menu</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="order.html" class="nav-link">Order Online</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li>
+                    <button class="nav-cart-btn" onclick="window.location.href='order.html'">
+                        🛒 Cart <span class="cart-count">0</span>
+                    </button>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+        <div class="container">
+            <span class="hero-tag">🍕 Our Story</span>
+            <h1>About <span>Nuwafana Pizza</span></h1>
+            <p>We believe great pizza brings people together. Since 2018, we've been crafting joy, one slice at a time.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== OUR STORY ===== -->
+    <section class="about-story section-padding">
+        <div class="container">
+            <!-- Image -->
+            <div class="about-image-wrap">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=85"
+                    alt="The Nuwafana Pizza kitchen team preparing fresh pizza" class="about-story-img"
+                    loading="lazy" />
+                <div class="about-image-badge">
+                    <div class="badge-num">6+</div>
+                    <div class="badge-label">Years of Excellence</div>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <div class="about-text">
+                <p class="subtitle">Our Story</p>
+                <h2>Born from Passion, <span>Built with Love</span></h2>
+                <p>
+                    Nuwafana Pizza was founded in 2018 by a family of food lovers in Mogadishu, Somalia, with a single
+                    mission: to bring the joy of authentic, handcrafted pizza to every table in our community.
+                </p>
+                <p>
+                    The name "Nuwafana" — meaning "flourishing" in Somali — reflects our commitment to growth, quality,
+                    and community. We started with a small oven, a secret dough recipe passed down through generations,
+                    and an unwavering belief that food made with love tastes better.
+                </p>
+                <p>
+                    Today, we serve thousands of happy customers, but our values remain unchanged: only the freshest
+                    locally-sourced ingredients, hand-stretched dough made fresh every morning, and service that feels
+                    like family.
+                </p>
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:28px;">
+                    <a href="menu.html" class="btn btn-primary">Discover Our Menu</a>
+                    <a href="contact.html" class="btn btn-dark">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== NUMBERS ===== -->
+    <section class="numbers-section">
+        <div class="container">
+            <div class="numbers-grid">
+                <div class="number-item">
+                    <div class="num">10K+</div>
+                    <div class="num-label">Happy Customers</div>
+                </div>
+                <div class="number-item">
+                    <div class="num">50+</div>
+                    <div class="num-label">Pizza Varieties</div>
+                </div>
+                <div class="number-item">
+                    <div class="num">6</div>
+                    <div class="num-label">Years in Business</div>
+                </div>
+                <div class="number-item">
+                    <div class="num">4.9★</div>
+                    <div class="num-label">Average Rating</div>
+                </div>
+                <div class="number-item">
+                    <div class="num">30min</div>
+                    <div class="num-label">Avg. Delivery Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== VALUES ===== -->
+    <section class="section-padding values-section">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">What We <span>Stand For</span></h2>
+                <p class="section-subtitle">Our commitment to quality, freshness, and community drives everything we do.
+                </p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="v-icon">🌱</div>
+                    <h3>Fresh Ingredients</h3>
+                    <p>We source our vegetables, herbs, and toppings locally from trusted Somali farms every single day.
+                    </p>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon">👨‍🍳</div>
+                    <h3>Expert Craftsmanship</h3>
+                    <p>Every pizza is hand-stretched and crafted by our experienced chefs who take pride in every single
+                        slice.</p>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon">❤️</div>
+                    <h3>Made with Love</h3>
+                    <p>Our family recipes and passion for food shine through in every bite. Cooking is our love
+                        language.</p>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon">🚀</div>
+                    <h3>Fast Delivery</h3>
+                    <p>We guarantee delivery in 30 minutes or less, so your pizza arrives hot, fresh, and perfect every
+                        time.</p>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon">♻️</div>
+                    <h3>Sustainable Practices</h3>
+                    <p>We use eco-friendly packaging and are committed to reducing our environmental footprint in our
+                        community.</p>
+                </div>
+                <div class="value-card">
+                    <div class="v-icon">🤝</div>
+                    <h3>Community First</h3>
+                    <p>Nuwafana gives back to Mogadishu through local partnerships, youth employment, and community
+                        events.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MISSION ===== -->
+    <section class="mission-section">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p>
+                "To bring people together through the universal language of great food — crafting every pizza with the
+                finest ingredients, the deepest care, and the warmest Somali hospitality."
+            </p>
+            <a href="menu.html" class="btn btn-outline" style="border-color:var(--white);color:var(--white);">
+                Discover Our Menu →
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-text">Nuwa<span>fana</span> Pizza 🍕</div>
+                    <p>Fresh, handcrafted pizzas made with locally-sourced ingredients. Delivering happiness since 2018.
+                    </p>
+                    <div class="social-links" style="margin-top:20px;">
+                        <a href="#" class="social-link">f</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">𝕏</a>
+                        <a href="#" class="social-link">🎵</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Our Menu</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="order.html">Order Online</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="menu.html">Classic Pizza</a></li>
+                        <li><a href="menu.html">Chicken Pizza</a></li>
+                        <li><a href="menu.html">Beef Pizza</a></li>
+                        <li><a href="menu.html">Vegetarian</a></li>
+                        <li><a href="menu.html">Special Pizza</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <div class="footer-contact-item"><span class="icon">📍</span><span>KM5, Maka Al-Mukarama Road,
+                            Mogadishu</span></div>
+                    <div class="footer-contact-item"><span class="icon">📞</span><span>+252 61 234 5678</span></div>
+                    <div class="footer-contact-item"><span class="icon">📧</span><span>hello@nuwafanapizza.so</span>
+                    </div>
+                    <div class="footer-contact-item"><span class="icon">🕐</span><span>Mon-Sun: 10:00 AM – 11:00
+                            PM</span></div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Nuwafana Pizza. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

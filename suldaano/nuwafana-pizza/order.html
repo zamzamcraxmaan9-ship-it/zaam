@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Online — Nuwafana Pizza</title>
+    <meta name="description"
+        content="Order your favourite Nuwafana Pizza online. Select your pizza, customize it, and we'll deliver fresh to your door." />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* ── ORDER-SPECIFIC STYLES ── */
+        .order-layout {
+            padding: 48px 0 80px;
+            background: var(--cream);
+        }
+
+        .order-layout .container {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* ─ Left: Pizza Picker ─ */
+        .order-left h2 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            color: var(--black);
+        }
+
+        .pizza-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .picker-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .picker-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .picker-card.selected {
+            border-color: var(--red);
+        }
+
+        .picker-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .picker-card-info {
+            padding: 14px;
+        }
+
+        .picker-card-info h4 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: var(--black);
+        }
+
+        .picker-card-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .picker-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .picker-price {
+            font-weight: 700;
+            color: var(--red);
+            font-size: 1rem;
+        }
+
+        /* Customize Panel */
+        .customize-panel {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+            display: none;
+        }
+
+        .customize-panel.visible {
+            display: block;
+        }
+
+        .customize-panel h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+            color: var(--black);
+        }
+
+        .customize-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .customize-row .form-group {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--red);
+            background: transparent;
+            color: var(--red);
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .qty-display {
+            font-weight: 700;
+            font-size: 1.1rem;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* Toppings */
+        .toppings-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .topping-chip {
+            padding: 6px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #555;
+            user-select: none;
+        }
+
+        .topping-chip.selected {
+            border-color: var(--red);
+            background: rgba(192, 57, 43, 0.1);
+            color: var(--red);
+        }
+
+        /* ─ Right: Cart Sidebar ─ */
+        .cart-sidebar {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: calc(var(--nav-height) + 24px);
+        }
+
+        .cart-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cart-header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+        }
+
+        .clear-cart-btn {
+            background: transparent;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 0.78rem;
+            color: var(--gray);
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: var(--transition);
+        }
+
+        .clear-cart-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .cart-items {
+            padding: 16px 24px;
+            max-height: 340px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--black);
+        }
+
+        .cart-item-meta {
+            font-size: 0.78rem;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--red);
+            font-size: 0.92rem;
+            margin-top: 4px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .item-qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1.5px solid var(--red);
+            background: transparent;
+            color: var(--red);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-qty-btn:hover {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .item-qty {
+            font-size: 0.88rem;
+            font-weight: 700;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .remove-item {
+            background: transparent;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 4px;
+            transition: var(--transition);
+        }
+
+        .remove-item:hover {
+            color: var(--red);
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-cart .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            font-size: 0.88rem;
+        }
+
+        .cart-summary {
+            padding: 16px 24px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .cart-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--gray);
+        }
+
+        .cart-summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--black);
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            margin-top: 4px;
+        }
+
+        /* Checkout Form */
+        .checkout-form {
+            padding: 20px 24px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .checkout-form h4 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: var(--black);
+        }
+
+        .place-order-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 16px;
+        }
+
+        .place-order-btn:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Success Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 48px 36px;
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.show .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .modal-box h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--black);
+            margin-bottom: 10px;
+        }
+
+        .modal-box p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .modal-order-id {
+            background: var(--cream);
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--red);
+            display: inline-block;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 1024px) {
+            .order-layout .container {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">🍕</div>
+                <div class="logo-text">Nuwa<span>fana</span></div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="menu.html" class="nav-link">Menu</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="order.html" class="nav-link">Order Online</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li>
+                    <button class="nav-cart-btn"
+                        onclick="document.querySelector('.cart-sidebar').scrollIntoView({behavior:'smooth'})">
+                        🛒 Cart <span class="cart-count">0</span>
+                    </button>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+        <div class="container">
+            <span class="hero-tag">🛒 Fast & Easy Ordering</span>
+            <h1>Order <span>Online</span></h1>
+            <p>Select your favourite pizza, customize it your way, and we'll deliver it fresh to your door.</p>
+        </div>
+    </section>
+
+    <!-- ===== ORDER LAYOUT ===== -->
+    <div class="order-layout">
+        <div class="container">
+
+            <!-- ── LEFT: Pick Your Pizza ── -->
+            <div class="order-left">
+                <h2>🍕 Choose Your Pizza</h2>
+                <div class="pizza-picker-grid" id="pickerGrid">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Customize Panel -->
+                <div class="customize-panel" id="customizePanel">
+                    <h3>🎨 Customize: <span id="selectedPizzaName">—</span></h3>
+                    <div class="customize-row">
+                        <div class="form-group">
+                            <label for="pizzaSize">Size</label>
+                            <select id="pizzaSize" class="form-control">
+                                <option value="Small" data-multiplier="0.85">Small (8") — 15% off</option>
+                                <option value="Medium" data-multiplier="1" selected>Medium (12") — Regular</option>
+                                <option value="Large" data-multiplier="1.2">Large (16") — +20%</option>
+                                <option value="XL" data-multiplier="1.4">XL (18") — +40%</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <div class="qty-control">
+                                <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+                                <span class="qty-display" id="qtyDisplay">1</span>
+                                <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toppings -->
+                    <div class="form-group">
+                        <label>Extra Toppings <span
+                                style="font-weight:400;color:var(--gray);font-size:0.82rem;">(optional, tap to
+                                select)</span></label>
+                        <div class="toppings-grid" id="toppingsGrid">
+                            <span class="topping-chip" data-topping="Extra Cheese">🧀 Extra Cheese</span>
+                            <span class="topping-chip" data-topping="Mushrooms">🍄 Mushrooms</span>
+                            <span class="topping-chip" data-topping="Jalapeños">🌶️ Jalapeños</span>
+                            <span class="topping-chip" data-topping="Olives">🫒 Olives</span>
+                            <span class="topping-chip" data-topping="Onions">🧅 Onions</span>
+                            <span class="topping-chip" data-topping="Sweet Corn">🌽 Sweet Corn</span>
+                            <span class="topping-chip" data-topping="Sun-Dried Tomatoes">🍅 Sun-Dried Tomatoes</span>
+                            <span class="topping-chip" data-topping="Bell Peppers">🫑 Bell Peppers</span>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:6px;">
+                        <div style="font-size:1rem;font-weight:700;">
+                            Total: <span id="customizeTotal" style="color:var(--red);">$0.00</span>
+                        </div>
+                        <button class="btn btn-primary" id="addToCartBtn">🛒 Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── RIGHT: Cart Sidebar ── -->
+            <div class="cart-sidebar" id="cartSidebar">
+                <div class="cart-header">
+                    <h3>🛒 Your Order</h3>
+                    <button class="clear-cart-btn" id="clearCartBtn">Clear All</button>
+                </div>
+
+                <div class="cart-items" id="cartItems">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <div class="cart-summary" id="cartSummary" style="display:none;">
+                    <div class="cart-summary-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+                    <div class="cart-summary-row"><span>Delivery Fee</span><span>$2.50</span></div>
+                    <div class="cart-summary-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+                </div>
+
+                <!-- Checkout Form -->
+                <form class="checkout-form" id="checkoutForm" novalidate>
+                    <h4>📦 Delivery Details</h4>
+                    <div class="form-group">
+                        <label for="custName">Full Name *</label>
+                        <input type="text" id="custName" class="form-control" placeholder="e.g. Ahmed Hassan"
+                            required />
+                        <span class="error-msg">Please enter your full name.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="custPhone">Phone Number *</label>
+                        <input type="tel" id="custPhone" class="form-control" placeholder="+252 61 234 5678" required />
+                        <span class="error-msg">Please enter a valid phone number.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="custAddress">Delivery Address *</label>
+                        <textarea id="custAddress" class="form-control" rows="2" placeholder="Street, District, City"
+                            required style="resize:none;"></textarea>
+                        <span class="error-msg">Please enter your delivery address.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="custNotes">Order Notes <span
+                                style="font-weight:400;color:var(--gray);font-size:0.8rem;">(optional)</span></label>
+                        <input type="text" id="custNotes" class="form-control"
+                            placeholder="e.g. No onions, extra sauce..." />
+                    </div>
+
+                    <button type="submit" class="place-order-btn">🎉 Place Order</button>
+
+                    <p style="text-align:center;font-size:0.78rem;color:var(--gray);margin-top:12px;">
+                        ⚠️ This is a demo order — no real payment is processed.
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== ORDER SUCCESS MODAL ===== -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-box">
+            <div class="modal-icon">🎉</div>
+            <h2>Order Placed!</h2>
+            <p>Thank you for ordering from Nuwafana Pizza. Your delicious pizza is being prepared and will be delivered
+                fresh to your door!</p>
+            <div class="modal-order-id" id="orderIdDisplay">#NWF-0000</div>
+            <p style="font-size:0.82rem;color:var(--gray);">Estimated delivery: 25–30 minutes</p>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
+                <a href="index.html" class="btn btn-primary">🏠 Back to Home</a>
+                <a href="menu.html" class="btn btn-dark">🍕 Order Again</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // ─── State ───────────────────────────────────────────────────────────────
+        let selectedPizzaId = null;
+        let currentQty = 1;
+
+        // ─── Render Pizza Picker ─────────────────────────────────────────────────
+        function renderPicker() {
+            const grid = document.getElementById('pickerGrid');
+            grid.innerHTML = PIZZA_DATA.map(p => `
+        <div class="picker-card" data-id="${p.id}" onclick="selectPizza(${p.id})">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" />
+          <div class="picker-card-info">
+            ${p.badge ? `<span class="pizza-badge" style="position:relative;top:0;left:0;display:inline-block;margin-bottom:6px;">${p.badge}</span>` : ''}
+            <h4>${p.name}</h4>
+            <p>${p.desc.substring(0, 60)}…</p>
+            <div class="picker-card-footer">
+              <span class="picker-price">$${p.price.toFixed(2)}</span>
+              <span style="font-size:0.78rem;color:var(--gray);">from</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // ─── Select Pizza ─────────────────────────────────────────────────────────
+        function selectPizza(id) {
+            selectedPizzaId = id;
+            currentQty = 1;
+            document.getElementById('qtyDisplay').textContent = 1;
+
+            // Highlight selected card
+            document.querySelectorAll('.picker-card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.picker-card[data-id="${id}"]`).classList.add('selected');
+
+            // Show customize panel
+            const pizza = PIZZA_DATA.find(p => p.id === id);
+            document.getElementById('selectedPizzaName').textContent = pizza.name;
+            document.getElementById('customizePanel').classList.add('visible');
+
+            // Reset toppings
+            document.querySelectorAll('.topping-chip').forEach(c => c.classList.remove('selected'));
+
+            // Reset size
+            document.getElementById('pizzaSize').value = 'Medium';
+
+            updateCustomizeTotal();
+
+            // Scroll to panel
+            document.getElementById('customizePanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // ─── Update Customize Total ───────────────────────────────────────────────
+        function updateCustomizeTotal() {
+            if (!selectedPizzaId) return;
+            const pizza = PIZZA_DATA.find(p => p.id === selectedPizzaId);
+            const sizeSelect = document.getElementById('pizzaSize');
+            const multiplier = parseFloat(sizeSelect.options[sizeSelect.selectedIndex].dataset.multiplier) || 1;
+            const price = pizza.price * multiplier * currentQty;
+            document.getElementById('customizeTotal').textContent = `$${price.toFixed(2)}`;
+        }
+
+        // ─── Qty Buttons ──────────────────────────────────────────────────────────
+        document.getElementById('qtyMinus').addEventListener('click', () => {
+            if (currentQty > 1) { currentQty--; document.getElementById('qtyDisplay').textContent = currentQty; updateCustomizeTotal(); }
+        });
+        document.getElementById('qtyPlus').addEventListener('click', () => {
+            if (currentQty < 10) { currentQty++; document.getElementById('qtyDisplay').textContent = currentQty; updateCustomizeTotal(); }
+        });
+
+        document.getElementById('pizzaSize').addEventListener('change', updateCustomizeTotal);
+
+        // ─── Toppings ─────────────────────────────────────────────────────────────
+        document.getElementById('toppingsGrid').addEventListener('click', e => {
+            const chip = e.target.closest('.topping-chip');
+            if (chip) chip.classList.toggle('selected');
+        });
+
+        // ─── Add to Cart Button ───────────────────────────────────────────────────
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+            if (!selectedPizzaId) return;
+            const size = document.getElementById('pizzaSize').value;
+            addToCart(selectedPizzaId, currentQty, size);
+            renderCartSidebar();
+        });
+
+        // ─── Render Cart Sidebar ─────────────────────────────────────────────────
+        function renderCartSidebar() {
+            const cart = getCart();
+            const cartItemsEl = document.getElementById('cartItems');
+            const cartSummaryEl = document.getElementById('cartSummary');
+
+            if (cart.length === 0) {
+                cartItemsEl.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-icon">🛒</div>
+            <p>Your cart is empty.<br>Pick a pizza above to get started!</p>
+          </div>
+        `;
+                cartSummaryEl.style.display = 'none';
+                return;
+            }
+
+            cartSummaryEl.style.display = 'block';
+            let html = '';
+            cart.forEach((item, idx) => {
+                html += `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}" class="cart-item-img" />
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-meta">Size: ${item.size}</div>
+              <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+              <div class="cart-item-actions">
+                <button class="item-qty-btn" onclick="changeItemQty(${idx}, -1)">−</button>
+                <span class="item-qty">${item.qty}</span>
+                <button class="item-qty-btn" onclick="changeItemQty(${idx}, 1)">+</button>
+                <button class="remove-item" onclick="removeItem(${idx})" aria-label="Remove ${item.name}">✕</button>
+              </div>
+            </div>
+          </div>
+        `;
+            });
+            cartItemsEl.innerHTML = html;
+
+            const subtotal = getCartTotal();
+            document.getElementById('cartSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cartTotal').textContent = `$${(subtotal + 2.50).toFixed(2)}`;
+            updateCartBadge();
+        }
+
+        // ─── Change item qty ─────────────────────────────────────────────────────
+        function changeItemQty(idx, delta) {
+            const cart = getCart();
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) cart.splice(idx, 1);
+            saveCart(cart);
+            renderCartSidebar();
+            updateCartBadge();
+        }
+
+        // ─── Remove item ─────────────────────────────────────────────────────────
+        function removeItem(idx) {
+            const cart = getCart();
+            cart.splice(idx, 1);
+            saveCart(cart);
+            renderCartSidebar();
+            updateCartBadge();
+        }
+
+        // ─── Clear Cart ───────────────────────────────────────────────────────────
+        document.getElementById('clearCartBtn').addEventListener('click', () => {
+            saveCart([]);
+            renderCartSidebar();
+            updateCartBadge();
+        });
+
+        // ─── Checkout Form Submit ─────────────────────────────────────────────────
+        document.getElementById('checkoutForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const form = e.target;
+            const cart = getCart();
+
+            if (cart.length === 0) {
+                showToast('🛒 Please add at least one pizza to your cart!');
+                return;
+            }
+
+            if (!validateForm(form)) {
+                showToast('⚠️ Please fill in all required fields.');
+                return;
+            }
+
+            // Simulate order placement
+            const orderId = 'NWF-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('orderIdDisplay').textContent = `#${orderId}`;
+
+            // Clear cart
+            saveCart([]);
+            updateCartBadge();
+            renderCartSidebar();
+            form.reset();
+
+            // Show success modal
+            document.getElementById('orderModal').classList.add('show');
+        });
+
+        // Close modal on overlay click
+        document.getElementById('orderModal').addEventListener('click', e => {
+            if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
+        });
+
+        // ─── Init ─────────────────────────────────────────────────────────────────
+        renderPicker();
+        renderCartSidebar();
+    </script>
+</body>
+
+</html>

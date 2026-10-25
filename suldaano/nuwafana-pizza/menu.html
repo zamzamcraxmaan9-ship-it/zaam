@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu — Nuwafana Pizza</title>
+    <meta name="description"
+        content="Browse our full menu of classic, chicken, beef, vegetarian, and special pizzas at Nuwafana Pizza." />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        /* ── MENU-SPECIFIC STYLES ── */
+        .menu-controls {
+            background: var(--cream);
+            padding: 32px 0;
+            position: sticky;
+            top: var(--nav-height);
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .menu-controls .container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Search */
+        .menu-search-wrap {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            padding: 8px 20px;
+            gap: 10px;
+            max-width: 480px;
+            transition: var(--transition);
+        }
+
+        .menu-search-wrap:focus-within {
+            border-color: var(--red);
+        }
+
+        .menu-search-wrap input {
+            border: none;
+            outline: none;
+            font-family: var(--font-body);
+            font-size: 0.92rem;
+            width: 100%;
+            background: transparent;
+            color: var(--black);
+        }
+
+        .menu-search-wrap .search-icon {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 2px solid #e0e0e0;
+            background: var(--white);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: #555;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--red);
+            border-color: var(--red);
+            color: var(--white);
+        }
+
+        /* Menu Grid */
+        .menu-section {
+            padding: 48px 0;
+        }
+
+        .menu-category-title {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            color: var(--black);
+            margin-bottom: 24px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--red);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 26px;
+            margin-bottom: 48px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            display: none;
+        }
+
+        .no-results .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 14px;
+        }
+
+        .no-results h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .menu-controls .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">🍕</div>
+                <div class="logo-text">Nuwa<span>fana</span></div>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="menu.html" class="nav-link">Menu</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="order.html" class="nav-link">Order Online</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li>
+                    <button class="nav-cart-btn" onclick="window.location.href='order.html'">
+                        🛒 Cart <span class="cart-count">0</span>
+                    </button>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+        </div>
+    </nav>
+
+    <!-- ===== PAGE HERO ===== -->
+    <section class="page-hero">
+        <div class="container">
+            <span class="hero-tag">🍕 Crafted Fresh Daily</span>
+            <h1>Our <span>Menu</span></h1>
+            <p>Explore our full range of handcrafted pizzas, made with premium ingredients and fired to golden
+                perfection.</p>
+        </div>
+    </section>
+
+    <!-- ===== MENU CONTROLS ===== -->
+    <div class="menu-controls">
+        <div class="container">
+            <!-- Search Bar -->
+            <div class="menu-search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search for a pizza..."
+                    aria-label="Search pizza by name" />
+            </div>
+            <!-- Category Filters -->
+            <div class="category-filters" id="categoryFilters">
+                <button class="filter-btn active" data-cat="all">🍕 All Pizzas</button>
+                <button class="filter-btn" data-cat="classic">🍅 Classic</button>
+                <button class="filter-btn" data-cat="chicken">🍗 Chicken</button>
+                <button class="filter-btn" data-cat="beef">🥩 Beef</button>
+                <button class="filter-btn" data-cat="vegetarian">🥦 Vegetarian</button>
+                <button class="filter-btn" data-cat="special">⭐ Special</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MENU CONTENT ===== -->
+    <section class="menu-section">
+        <div class="container">
+            <div id="menuContent">
+                <!-- JS renders categories and cards here -->
+            </div>
+            <div class="no-results" id="noResults">
+                <div class="no-results-icon">🍕</div>
+                <h3>No pizzas found</h3>
+                <p>Try a different search term or browse all categories.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo-text">Nuwa<span>fana</span> Pizza 🍕</div>
+                    <p>Fresh, handcrafted pizzas made with locally-sourced ingredients. Delivering happiness since 2018.
+                    </p>
+                    <div class="social-links" style="margin-top:20px;">
+                        <a href="#" class="social-link">f</a>
+                        <a href="#" class="social-link">📷</a>
+                        <a href="#" class="social-link">𝕏</a>
+                        <a href="#" class="social-link">🎵</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Our Menu</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="order.html">Order Online</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <ul>
+                        <li><a href="#">Classic Pizza</a></li>
+                        <li><a href="#">Chicken Pizza</a></li>
+                        <li><a href="#">Beef Pizza</a></li>
+                        <li><a href="#">Vegetarian</a></li>
+                        <li><a href="#">Special Pizza</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <div class="footer-contact-item"><span class="icon">📍</span><span>KM5, Maka Al-Mukarama Road,
+                            Mogadishu</span></div>
+                    <div class="footer-contact-item"><span class="icon">📞</span><span>+252 61 234 5678</span></div>
+                    <div class="footer-contact-item"><span class="icon">📧</span><span>hello@nuwafanapizza.so</span>
+                    </div>
+                    <div class="footer-contact-item"><span class="icon">🕐</span><span>Mon-Sun: 10:00 AM – 11:00
+                            PM</span></div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Nuwafana Pizza. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // ─── Category Icons ──────────────────────────────────────────────────────
+        const catIcons = { classic: '🍅', chicken: '🍗', beef: '🥩', vegetarian: '🥦', special: '⭐' };
+        const catLabels = { classic: 'Classic Pizza', chicken: 'Chicken Pizza', beef: 'Beef Pizza', vegetarian: 'Vegetarian Pizza', special: 'Special Pizza' };
+
+        let currentCat = 'all';
+        let currentSearch = '';
+
+        // ─── Render Menu ─────────────────────────────────────────────────────────
+        function renderMenu() {
+            const container = document.getElementById('menuContent');
+            const noResults = document.getElementById('noResults');
+
+            // Filter pizzas
+            let filtered = PIZZA_DATA;
+            if (currentCat !== 'all') filtered = filtered.filter(p => p.category === currentCat);
+            if (currentSearch) filtered = filtered.filter(p => p.name.toLowerCase().includes(currentSearch.toLowerCase()));
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            // Group by category
+            const grouped = {};
+            filtered.forEach(p => {
+                if (!grouped[p.category]) grouped[p.category] = [];
+                grouped[p.category].push(p);
+            });
+
+            container.innerHTML = '';
+            Object.keys(grouped).forEach(cat => {
+                const pizzas = grouped[cat];
+                let html = `
+          <div class="category-block" id="${cat}">
+            <h2 class="menu-category-title">${catIcons[cat] || '🍕'} ${catLabels[cat] || cat}</h2>
+            <div class="menu-grid">
+        `;
+                pizzas.forEach(p => {
+                    html += `
+            <div class="pizza-card" data-id="${p.id}">
+              <div class="pizza-card-img-wrap">
+                <img src="${p.image}" alt="${p.name}" class="pizza-card-img" loading="lazy" />
+                ${p.badge ? `<span class="pizza-badge">${p.badge}</span>` : ''}
+              </div>
+              <div class="pizza-card-body">
+                <div class="pizza-card-category">${catLabels[p.category]}</div>
+                <h3 class="pizza-card-title">${p.name}</h3>
+                <p class="pizza-card-desc">${p.desc}</p>
+                <div class="pizza-card-footer">
+                  <span class="pizza-price">$${p.price.toFixed(2)}</span>
+                  <button class="add-cart-btn" onclick="addToCart(${p.id})">🛒 Add to Cart</button>
+                </div>
+              </div>
+            </div>
+          `;
+                });
+                html += '</div></div>';
+                container.innerHTML += html;
+            });
+        }
+
+        // ─── Category Filters ────────────────────────────────────────────────────
+        document.getElementById('categoryFilters').addEventListener('click', e => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCat = btn.dataset.cat;
+            renderMenu();
+        });
+
+        // ─── Search ──────────────────────────────────────────────────────────────
+        document.getElementById('searchInput').addEventListener('input', e => {
+            currentSearch = e.target.value;
+            renderMenu();
+        });
+
+        // Initial render
+        renderMenu();
+    </script>
+</body>
+
+</html>
